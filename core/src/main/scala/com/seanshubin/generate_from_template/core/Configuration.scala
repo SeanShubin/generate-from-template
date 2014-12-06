@@ -4,6 +4,7 @@ case class Configuration(templateDirectory: String,
                          destinationDirectory: String,
                          directoryReplacements: Map[String, String],
                          textReplacements: Map[String, String])
+
 /*
 {
   templateDirectory     /home/sshubin/github/sean/template-scala-web

@@ -43,16 +43,17 @@ object SequenceComparisonResult {
       val actual = actualSeq(index)
       val expected = expectedSeq(index)
       val header = s"difference at index $index"
-      Seq(header, 
+      Seq(header,
         s"actual  : $actual",
         s"expected: $expected")
     }
   }
+
 }
 
 object SequenceComparison {
   def compare[T](actualSeq: Seq[T], expectedSeq: Seq[T]): SequenceComparisonResult[T] = {
-    import SequenceComparisonResult._
+    import com.seanshubin.generate_from_template.core.SequenceComparisonResult._
 
     @tailrec
     def compareLists(index: Int, remainingActual: List[T], remainingExpected: List[T]): SequenceComparisonResult[T] = {

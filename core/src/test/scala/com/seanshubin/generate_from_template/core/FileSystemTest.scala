@@ -1,47 +1,41 @@
 package com.seanshubin.generate_from_template.core
 
-import java.io.IOException
 import java.nio.charset.StandardCharsets
-import java.nio.file.attribute.BasicFileAttributes
-import java.nio.file.{FileVisitResult, FileVisitor, Path, Paths}
+import java.nio.file.{FileVisitor, Path, Paths}
 
 import org.scalatest.FunSuite
 import org.scalatest.mock.EasyMockSugar
 
-import scala.collection.mutable.ArrayBuffer
-
 class FileSystemTest extends FunSuite with EasyMockSugar {
   val charset = StandardCharsets.UTF_8
 
-  class FakeFileVisitor extends FileVisitor[Path] {
-    private val filesVisitedBuffer = new ArrayBuffer[Path]
-    def filesVisited = filesVisitedBuffer
-    override def preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult = {
-      filesVisitedBuffer.append(dir)
-      FileVisitResult.CONTINUE
+  def path(first: String, more: String*): Path = Paths.get(first, more: _*)
+
+  class FakeFileSystemIntegration extends FileSystemIntegration {
+    override def walkFileTree(start: Path, visitor: FileVisitor[_ >: Path]): Unit = {
+      visitor.preVisitDirectory(Paths.get("target", "walk-file-tree-test"), null)
+      visitor.preVisitDirectory(Paths.get("target", "walk-file-tree-test", "aaa"), null)
+      visitor.preVisitDirectory(Paths.get("target", "walk-file-tree-test", "aaa", "ccc"), null)
+      visitor.visitFile(Paths.get("target", "walk-file-tree-test", "aaa", "ccc", "ddd.txt"), null)
+      visitor.postVisitDirectory(Paths.get("target", "walk-file-tree-test", "aaa", "ccc"), null)
+      visitor.preVisitDirectory(Paths.get("target", "walk-file-tree-test", "aaa", "bbb"), null)
+      visitor.visitFile(Paths.get("target", "walk-file-tree-test", "aaa", "bbb", "ccc.txt"), null)
+      visitor.postVisitDirectory(Paths.get("target", "walk-file-tree-test", "aaa", "bbb"), null)
+      visitor.visitFile(Paths.get("target", "walk-file-tree-test", "aaa", "bbb.txt"), null)
+      visitor.postVisitDirectory(Paths.get("target", "walk-file-tree-test", "aaa"), null)
+      visitor.visitFile(Paths.get("target", "walk-file-tree-test", "aaa.txt"), null)
+      visitor.postVisitDirectory(Paths.get("target", "walk-file-tree-test"), null)
     }
 
-    override def visitFileFailed(file: Path, exc: IOException): FileVisitResult = ???
+    override def createDirectories(path: Path): Unit = ???
 
-    override def visitFile(file:Path, attrs: BasicFileAttributes): FileVisitResult = {
-      filesVisitedBuffer.append(file)
-      FileVisitResult.CONTINUE
-    }
-
-    override def postVisitDirectory(dir: Path, exc: IOException): FileVisitResult = FileVisitResult.CONTINUE
+    override def writeBytes(path: Path, bytes: Array[Byte]): Unit = ???
   }
 
-  test("can walk file tree") {
-    val fileSystem:FileSystem = new FileSystemImpl()
-    fileSystem.createDirectories(path("target", "walk-file-tree-test", "aaa", "bbb"))
-    fileSystem.createDirectories(path("target", "walk-file-tree-test", "aaa", "ccc"))
-    writeString(fileSystem,      path("target", "walk-file-tree-test", "aaa.txt"), "hello aaa!")
-    writeString(fileSystem,      path("target", "walk-file-tree-test", "aaa", "bbb.txt"), "hello bbb!")
-    writeString(fileSystem,      path("target", "walk-file-tree-test", "aaa", "bbb", "ccc.txt"), "hello ccc!")
-    writeString(fileSystem,      path("target", "walk-file-tree-test", "aaa", "ccc", "ddd.txt"), "hello ddd!")
-    val fileVisitor = new FakeFileVisitor()
-    fileSystem.walkFileTree(path("target", "walk-file-tree-test"), fileVisitor)
-    val actual = fileVisitor.filesVisited
+  test("can load files and directories") {
+    val fileSystemIntegration: FileSystemIntegration = new FakeFileSystemIntegration
+    val fileSystem: FileSystem = new FileSystemImpl(fileSystemIntegration)
+    val actual = fileSystem.allFilesAndDirectories(Paths.get("foo"))
     val expected = Seq(
       path("target", "walk-file-tree-test"),
       path("target", "walk-file-tree-test", "aaa"),
@@ -55,8 +49,4 @@ class FileSystemTest extends FunSuite with EasyMockSugar {
     val compareResult = SequenceComparison.compare(actual, expected)
     assert(compareResult.areSame, compareResult.toMultipleLineString.mkString("\n", "\n", ""))
   }
-
-  def path(first:String, more:String*):Path = Paths.get(first, more:_*)
-
-  def writeString(fileSystem:FileSystem, path:Path, text:String): Unit = fileSystem.writeBytes(path, text.getBytes(charset))
 }
