@@ -20,8 +20,8 @@ class FileSystemIntegrationTest extends FunSuite {
     writeString(fileSystem, path("target", "walk-file-tree-test", "aaa", "ccc", "ddd.txt"), "hello ddd!")
     val fileVisitor = new FileVisitorThatCollectsAllFilesAndDirectories
     fileSystem.walkFileTree(path("target", "walk-file-tree-test"), fileVisitor)
-    val actual = fileVisitor.filesVisited
-    val expected = Seq(
+    val actual = fileVisitor.filesVisited.toSet
+    val expected = Set(
       path("target", "walk-file-tree-test"),
       path("target", "walk-file-tree-test", "aaa"),
       path("target", "walk-file-tree-test", "aaa", "ccc"),
@@ -31,7 +31,7 @@ class FileSystemIntegrationTest extends FunSuite {
       path("target", "walk-file-tree-test", "aaa", "bbb.txt"),
       path("target", "walk-file-tree-test", "aaa.txt")
     )
-    val compareResult = SequenceComparison.compare(actual, expected)
+    val compareResult = SetComparison.compare(actual, expected)
     assert(compareResult.areSame, compareResult.toMultipleLineString.mkString("\n", "\n", ""))
   }
 
