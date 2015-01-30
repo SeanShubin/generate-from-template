@@ -8,4 +8,9 @@ trait FileSystemIntegration {
   def writeBytes(path: Path, bytes: Array[Byte])
 
   def createDirectories(path: Path)
+
+  def readAllBytes(path: Path): Array[Byte]
+
+  def isDirectory(path: Path): Boolean
+
 }

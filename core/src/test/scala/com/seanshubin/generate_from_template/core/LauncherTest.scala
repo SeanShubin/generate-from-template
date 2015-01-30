@@ -6,12 +6,23 @@ import org.scalatest.mock.EasyMockSugar
 class LauncherTest extends FunSuite with EasyMockSugar {
   test("launch") {
     val commandLineArguments = Seq("some-configuration-file")
-    val createRunner = mock[String => Runner]
+    val createRunner = mock[Configuration => Runner]
+    val jsonConfiguration = JsonConfiguration(
+      templateDirectory = "template directory",
+      destinationDirectory = "destination directory",
+      directoryReplacements = Map("aaa" -> "bbb"),
+      textReplacements = Map("ccc" -> "ddd"),
+      ignoreDirectoryNames = Seq("eee", "fff"),
+      ignoreFileNamePatterns = Seq("ggg", "hhh")
+    )
+    val configuration = jsonConfiguration.toConfiguration
     val runner = mock[Runner]
-    val launcher = new LauncherImpl(commandLineArguments, createRunner)
+    val fileSystem = mock[FileSystem]
+    val jsonMarshaller = mock[JsonMarshaller]
+    val launcher = new LauncherImpl(commandLineArguments, fileSystem, jsonMarshaller, createRunner)
 
     expecting {
-      createRunner("some-configuration-file").andReturn(runner)
+      createRunner(configuration).andReturn(runner)
       runner.run()
     }
 

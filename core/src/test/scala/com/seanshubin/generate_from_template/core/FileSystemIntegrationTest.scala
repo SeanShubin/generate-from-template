@@ -18,7 +18,9 @@ class FileSystemIntegrationTest extends FunSuite {
     writeString(fileSystem, path("target", "walk-file-tree-test", "aaa", "bbb.txt"), "hello bbb!")
     writeString(fileSystem, path("target", "walk-file-tree-test", "aaa", "bbb", "ccc.txt"), "hello ccc!")
     writeString(fileSystem, path("target", "walk-file-tree-test", "aaa", "ccc", "ddd.txt"), "hello ddd!")
-    val fileVisitor = new FileVisitorThatCollectsAllFilesAndDirectories
+    val ignoreDirectoryNames = Seq()
+    val ignoreFileNamePatterns = Seq()
+    val fileVisitor = new FileVisitorThatCollectsAllFilesAndDirectories(ignoreDirectoryNames, ignoreFileNamePatterns)
     fileSystem.walkFileTree(path("target", "walk-file-tree-test"), fileVisitor)
     val actual = fileVisitor.filesVisited.toSet
     val expected = Set(

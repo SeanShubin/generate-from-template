@@ -8,4 +8,8 @@ class FileSystemIntegrationImpl extends FileSystemIntegration {
   override def writeBytes(path: Path, bytes: Array[Byte]): Unit = Files.write(path, bytes)
 
   override def createDirectories(path: Path): Unit = Files.createDirectories(path)
+
+  override def readAllBytes(path: Path): Array[Byte] = Files.readAllBytes(path)
+
+  override def isDirectory(path: Path): Boolean = Files.isDirectory(path)
 }

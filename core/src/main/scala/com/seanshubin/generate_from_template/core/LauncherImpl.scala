@@ -1,8 +1,14 @@
 package com.seanshubin.generate_from_template.core
 
-class LauncherImpl(commandLineArguments: Seq[String], createRunner: String => Runner) extends Launcher {
+import java.nio.file.Paths
+
+class LauncherImpl(commandLineArguments: Seq[String], fileSystem: FileSystem, jsonMarshaller: JsonMarshaller, createRunner: Configuration => Runner) extends Launcher {
   override def launch(): Unit = {
-    val runner = createRunner(commandLineArguments(0))
+    val configFileName = commandLineArguments(0)
+    val configFilePath = Paths.get(configFileName)
+    val configText = fileSystem.loadFileIntoString(configFilePath)
+    val jsonConfiguration = jsonMarshaller.fromJson(configText, classOf[JsonConfiguration])
+    val runner = createRunner(jsonConfiguration.toConfiguration)
     runner.run()
   }
 }

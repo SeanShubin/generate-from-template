@@ -1,14 +1,22 @@
 package com.seanshubin.generate_from_template.console
 
-import com.seanshubin.generate_from_template.core.{Launcher, LauncherImpl, Runner}
+import java.nio.charset.{Charset, StandardCharsets}
+
+import com.seanshubin.generate_from_template.core._
 
 trait ProductionLauncherWiring {
   def commandLineArguments: Seq[String]
 
-  lazy val createRunner: String => Runner =
-    target => ProductionRunnerWiring(target).runner
+  lazy val createRunner: Configuration => Runner =
+    configuration => ProductionRunnerWiring(configuration).runner
 
-  lazy val launcher: Launcher = new LauncherImpl(commandLineArguments, createRunner)
+  lazy val fileSystemIntegration: FileSystemIntegration = new FileSystemIntegrationImpl
+  lazy val charset: Charset = StandardCharsets.UTF_8
+  lazy val emitLine: String => Unit = println
+  lazy val notifications: Notifications = new NotificationsImpl(emitLine)
+  lazy val fileSystem: FileSystem = new FileSystemImpl(fileSystemIntegration, charset, notifications)
+  lazy val jsonMarshaller: JsonMarshaller = new JsonMarshallerImpl
+  lazy val launcher: Launcher = new LauncherImpl(commandLineArguments, fileSystem, jsonMarshaller, createRunner)
 
 }
 

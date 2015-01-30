@@ -30,12 +30,19 @@ class FileSystemTest extends FunSuite with EasyMockSugar {
     override def createDirectories(path: Path): Unit = ???
 
     override def writeBytes(path: Path, bytes: Array[Byte]): Unit = ???
+
+    override def readAllBytes(path: Path): Array[Byte] = ???
+
+    override def isDirectory(path: Path): Boolean = ???
   }
 
   test("can load files and directories") {
     val fileSystemIntegration: FileSystemIntegration = new FakeFileSystemIntegration
-    val fileSystem: FileSystem = new FileSystemImpl(fileSystemIntegration)
-    val actual = fileSystem.allFilesAndDirectories(Paths.get("foo"))
+    val notifications = mock[Notifications]
+    val fileSystem: FileSystem = new FileSystemImpl(fileSystemIntegration, charset, notifications)
+    val ignoreDirectoryNames = Seq()
+    val ignoreFileNamePatterns = Seq()
+    val actual = fileSystem.allFilesAndDirectories(Paths.get("foo"), ignoreDirectoryNames, ignoreFileNamePatterns)
     val expected = Seq(
       path("target", "walk-file-tree-test"),
       path("target", "walk-file-tree-test", "aaa"),

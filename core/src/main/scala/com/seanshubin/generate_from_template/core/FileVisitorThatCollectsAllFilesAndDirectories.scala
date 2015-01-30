@@ -6,21 +6,29 @@ import java.nio.file.{FileVisitResult, FileVisitor, Path}
 
 import scala.collection.mutable.ArrayBuffer
 
-class FileVisitorThatCollectsAllFilesAndDirectories extends FileVisitor[Path] {
+class FileVisitorThatCollectsAllFilesAndDirectories(ignoreDirectoryNames: Seq[Path], ignoreFileNamePatterns: Seq[String]) extends FileVisitor[Path] {
   private val filesVisitedBuffer = new ArrayBuffer[Path]
 
   def filesVisited: Seq[Path] = filesVisitedBuffer
 
   override def preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult = {
-    filesVisitedBuffer.append(dir)
-    FileVisitResult.CONTINUE
+    if (ignoreDirectoryNames.contains(dir.getFileName)) {
+      FileVisitResult.SKIP_SUBTREE
+    } else {
+      filesVisitedBuffer.append(dir)
+      FileVisitResult.CONTINUE
+    }
   }
 
   override def visitFileFailed(file: Path, exc: IOException): FileVisitResult = ???
 
   override def visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult = {
-    filesVisitedBuffer.append(file)
-    FileVisitResult.CONTINUE
+    if (ignoreFileNamePatterns.exists(file.getFileName.toString.matches)) {
+      FileVisitResult.CONTINUE
+    } else {
+      filesVisitedBuffer.append(file)
+      FileVisitResult.CONTINUE
+    }
   }
 
   override def postVisitDirectory(dir: Path, exc: IOException): FileVisitResult = {
