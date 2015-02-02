@@ -10,10 +10,13 @@
     "template/scala/console": "my-app"
   },
   "ignoreDirectoryNames": [
+    "projectFilesBackup",
     "target",
-    ".git"
+    ".git",
+    ".idea"
   ],
   "ignoreFileNamePatterns": [
-    "\\.gitattributes"
+    "\\.gitattributes",
+    ".*\\.iml"
   ]
 }
