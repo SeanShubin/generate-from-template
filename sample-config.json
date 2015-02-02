@@ -1,0 +1,19 @@
+{
+  "templateDirectory": "../template-scala-console",
+  "destinationDirectory": "../my-app",
+  "directoryReplacements": {
+    "/template/scala/console/": "/my-app/"
+  },
+  "textReplacements": {
+    "template.scala.console": "my-app",
+    "template-scala-console": "my-app",
+    "template/scala/console": "my-app"
+  },
+  "ignoreDirectoryNames": [
+    "target",
+    ".git"
+  ],
+  "ignoreFileNamePatterns": [
+    "\\.gitattributes"
+  ]
+}
