@@ -3,7 +3,7 @@ package com.seanshubin.generate_from_template.core
 import java.nio.file.Path
 
 trait FileSystem {
-  def allFilesAndDirectories(path: Path, ignoreDirectoryNames: Seq[Path], ignoreFileNamePatterns: Seq[String]): Seq[Path]
+  def allFilesAndDirectories(path: Path, ignoreDirectoryNamePatterns: Seq[String], ignoreFileNamePatterns: Seq[String]): Seq[Path]
 
   def loadFileIntoString(path: Path): String
 

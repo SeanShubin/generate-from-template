@@ -6,13 +6,13 @@ import java.nio.file.{FileVisitResult, FileVisitor, Path}
 
 import scala.collection.mutable.ArrayBuffer
 
-class FileVisitorThatCollectsAllFilesAndDirectories(ignoreDirectoryNames: Seq[Path], ignoreFileNamePatterns: Seq[String]) extends FileVisitor[Path] {
+class FileVisitorThatCollectsAllFilesAndDirectories(ignoreDirectoryNamePatterns: Seq[String], ignoreFileNamePatterns: Seq[String]) extends FileVisitor[Path] {
   private val filesVisitedBuffer = new ArrayBuffer[Path]
 
   def filesVisited: Seq[Path] = filesVisitedBuffer
 
   override def preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult = {
-    if (ignoreDirectoryNames.contains(dir.getFileName)) {
+    if (ignoreDirectoryNamePatterns.exists(dir.getFileName.toString.matches)) {
       FileVisitResult.SKIP_SUBTREE
     } else {
       filesVisitedBuffer.append(dir)

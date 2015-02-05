@@ -8,8 +8,8 @@ import com.seanshubin.utility.file_system.FileSystemIntegration
 class FileSystemImpl(fileSystemIntegration: FileSystemIntegration,
                      charset: Charset,
                      notifications: Notifications) extends FileSystem {
-  override def allFilesAndDirectories(path: Path, ignoreDirectoryNames: Seq[Path], ignoreFileNamePatterns: Seq[String]): Seq[Path] = {
-    val fileVisitor = new FileVisitorThatCollectsAllFilesAndDirectories(ignoreDirectoryNames, ignoreFileNamePatterns)
+  override def allFilesAndDirectories(path: Path, ignoreDirectoryNamePatterns: Seq[String], ignoreFileNamePatterns: Seq[String]): Seq[Path] = {
+    val fileVisitor = new FileVisitorThatCollectsAllFilesAndDirectories(ignoreDirectoryNamePatterns, ignoreFileNamePatterns)
     fileSystemIntegration.walkFileTree(path, fileVisitor)
     fileVisitor.filesVisited
   }

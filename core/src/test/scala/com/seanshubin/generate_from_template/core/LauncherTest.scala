@@ -12,7 +12,7 @@ class LauncherTest extends FunSuite with EasyMockSugar {
       destinationDirectory = "destination directory",
       directoryReplacements = Map("aaa" -> "bbb"),
       textReplacements = Map("ccc" -> "ddd"),
-      ignoreDirectoryNames = Seq("eee", "fff"),
+      ignoreDirectoryNamePatterns = Seq("eee", "fff"),
       ignoreFileNamePatterns = Seq("ggg", "hhh")
     )
     val configuration = jsonConfiguration.toConfiguration

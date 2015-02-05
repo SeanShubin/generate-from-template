@@ -6,5 +6,5 @@ case class Configuration(templateDirectory: Path,
                          destinationDirectory: Path,
                          directoryReplacements: Map[Path, Path],
                          textReplacements: Map[String, String],
-                         ignoreDirectoryNames: Seq[Path],
+                         ignoreDirectoryNamePatterns: Seq[String],
                          ignoreFileNamePatterns: Seq[String])

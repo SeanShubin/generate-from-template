@@ -22,7 +22,7 @@ trait ProductionRunnerWiring {
     fileSystem,
     commandFactory,
     commandExecutor,
-    configuration.ignoreDirectoryNames,
+    configuration.ignoreDirectoryNamePatterns,
     configuration.ignoreFileNamePatterns)
 }
 

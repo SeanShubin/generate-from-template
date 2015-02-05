@@ -6,7 +6,7 @@ case class JsonConfiguration(templateDirectory: String,
                              destinationDirectory: String,
                              directoryReplacements: Map[String, String],
                              textReplacements: Map[String, String],
-                             ignoreDirectoryNames: Seq[String],
+                             ignoreDirectoryNamePatterns: Seq[String],
                              ignoreFileNamePatterns: Seq[String]) {
   def toConfiguration: Configuration = {
     val newTemplateDirectory = Paths.get(templateDirectory)
@@ -16,13 +16,12 @@ case class JsonConfiguration(templateDirectory: String,
       (Paths.get(key), Paths.get(value))
     }
     val newDirectoryReplacements = directoryReplacements.map(stringEntryToPathEntry)
-    val newIgnoreDirectoryNames = ignoreDirectoryNames.map(Paths.get(_))
     Configuration(
       newTemplateDirectory,
       newDestinationDirectory,
       newDirectoryReplacements,
       textReplacements,
-      newIgnoreDirectoryNames,
+      ignoreDirectoryNamePatterns,
       ignoreFileNamePatterns)
   }
 }
