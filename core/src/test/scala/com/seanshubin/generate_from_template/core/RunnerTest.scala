@@ -5,8 +5,6 @@ import java.nio.file.Paths
 import org.scalatest.FunSuite
 import org.scalatest.mock.EasyMockSugar
 
-import scala.collection.mutable.ArrayBuffer
-
 class RunnerTest extends FunSuite with EasyMockSugar {
   test("application flow") {
     val fileSystem = mock[FileSystem]
@@ -15,10 +13,9 @@ class RunnerTest extends FunSuite with EasyMockSugar {
     val directoryReplacements = Map(Paths.get("ddd", "eee") -> Paths.get("fff", "ggg"))
     val textReplacements = Map("hhh" -> "iii", "jjj" -> "kkk")
     val commandFactory = mock[CommandFactory]
-    val lines = new ArrayBuffer[String]()
-    val commandExecutor: CommandExecutor = new CommandExecutorImpl(fileSystem, textReplacements)
-    val ignoreDirectoryNames = Seq()
-    val ignoreFileNamePatterns = Seq()
+    val commandExecutor = mock[CommandExecutor]
+    val ignoreDirectoryNamePatterns = Seq("lll")
+    val ignoreFileNamePatterns = Seq("mmm")
     val runner: Runner = new RunnerImpl(
       templateDirectory,
       destinationDirectory,
@@ -26,10 +23,27 @@ class RunnerTest extends FunSuite with EasyMockSugar {
       fileSystem,
       commandFactory,
       commandExecutor,
-      ignoreDirectoryNames,
+      ignoreDirectoryNamePatterns,
       ignoreFileNamePatterns)
-    runner.run()
-    assert(lines.size === 1)
-    assert(lines(0) === "Hello, world!")
+    val templateFilesAndDirectories = Seq(
+      templateDirectory,
+      templateDirectory.resolve("baz"),
+      templateDirectory.resolve("baz").resolve("content.txt")
+    )
+    val command1 = CopyFileCommand(Paths.get("copy-from-1"), Paths.get("copy-to-1"))
+    val command2 = CopyFileCommand(Paths.get("copy-from-2"), Paths.get("copy-to-2"))
+    val commands = Seq(
+      command1,
+      command2
+    )
+    expecting {
+      fileSystem.allFilesAndDirectories(templateDirectory, ignoreDirectoryNamePatterns, ignoreFileNamePatterns).andReturn(templateFilesAndDirectories)
+      commandFactory.generateCommands(templateFilesAndDirectories, templateDirectory, destinationDirectory, directoryReplacements).andReturn(commands)
+      commandExecutor.execute(command1)
+      commandExecutor.execute(command2)
+    }
+    whenExecuting(fileSystem, commandFactory, commandExecutor) {
+      runner.run()
+    }
   }
 }

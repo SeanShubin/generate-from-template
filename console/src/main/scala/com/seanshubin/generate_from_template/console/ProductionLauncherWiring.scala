@@ -4,6 +4,7 @@ import java.nio.charset.{Charset, StandardCharsets}
 
 import com.seanshubin.generate_from_template.core._
 import com.seanshubin.utility.file_system.{FileSystemIntegration, FileSystemIntegrationImpl}
+import com.seanshubin.utility.json.{JsonMarshaller, JsonMarshallerImpl}
 
 trait ProductionLauncherWiring {
   def commandLineArguments: Seq[String]
