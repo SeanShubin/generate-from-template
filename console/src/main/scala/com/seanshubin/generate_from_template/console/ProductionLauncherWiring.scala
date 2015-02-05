@@ -3,6 +3,7 @@ package com.seanshubin.generate_from_template.console
 import java.nio.charset.{Charset, StandardCharsets}
 
 import com.seanshubin.generate_from_template.core._
+import com.seanshubin.utility.file_system.{FileSystemIntegration, FileSystemIntegrationImpl}
 
 trait ProductionLauncherWiring {
   def commandLineArguments: Seq[String]

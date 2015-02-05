@@ -3,6 +3,8 @@ package com.seanshubin.generate_from_template.core
 import java.nio.charset.Charset
 import java.nio.file.Path
 
+import com.seanshubin.utility.file_system.FileSystemIntegration
+
 class FileSystemImpl(fileSystemIntegration: FileSystemIntegration,
                      charset: Charset,
                      notifications: Notifications) extends FileSystem {
@@ -24,6 +26,6 @@ class FileSystemImpl(fileSystemIntegration: FileSystemIntegration,
     notifications.storeStringIntoFile(s, path)
     fileSystemIntegration.createDirectories(path.getParent)
     val bytes = s.getBytes(charset)
-    fileSystemIntegration.writeBytes(path, bytes)
+    fileSystemIntegration.write(path, bytes)
   }
 }
