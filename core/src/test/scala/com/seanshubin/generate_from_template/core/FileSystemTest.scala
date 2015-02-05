@@ -12,7 +12,23 @@ class FileSystemTest extends FunSuite with EasyMockSugar {
 
   def path(first: String, more: String*): Path = Paths.get(first, more: _*)
 
-  class FakeFileSystemIntegration extends FileSystemIntegration {
+  abstract class AbstractFileSystemIntegration extends FileSystemIntegration {
+    override def readAllBytes(path: Path): Array[Byte] = ???
+
+    override def createDirectories(path: Path): Path = ???
+
+    override def walkFileTree(start: Path, visitor: FileVisitor[_ >: Path]): Path = ???
+
+    override def write(path: Path, bytes: Array[Byte]): Path = ???
+
+    override def isDirectory(path: Path): Boolean = ???
+
+    override def deleteIfExists(path: Path): Boolean = ???
+
+    override def exists(path: Path): Boolean = ???
+  }
+
+  class FakeFileSystemIntegration extends AbstractFileSystemIntegration {
     override def walkFileTree(start: Path, visitor: FileVisitor[_ >: Path]): Path = {
       visitor.preVisitDirectory(Paths.get("target", "walk-file-tree-test"), null)
       visitor.preVisitDirectory(Paths.get("target", "walk-file-tree-test", "aaa"), null)
@@ -28,18 +44,6 @@ class FileSystemTest extends FunSuite with EasyMockSugar {
       visitor.postVisitDirectory(Paths.get("target", "walk-file-tree-test"), null)
       start
     }
-
-    override def readAllBytes(path: Path): Array[Byte] = ???
-
-    override def createDirectories(path: Path): Path = ???
-
-    override def write(path: Path, bytes: Array[Byte]): Path = ???
-
-    override def isDirectory(path: Path): Boolean = ???
-
-    override def deleteIfExists(path: Path): Boolean = ???
-
-    override def exists(path: Path): Boolean = ???
   }
 
   test("can load files and directories") {
@@ -61,5 +65,46 @@ class FileSystemTest extends FunSuite with EasyMockSugar {
     )
     val compareResult = SequenceComparison.compare(actual, expected)
     assert(compareResult.areSame, compareResult.toMultipleLineString.mkString("\n", "\n", ""))
+  }
+
+  test("load file into string") {
+    val fileSystemIntegration = mock[FileSystemIntegration]
+    val notifications = null
+    val fileSystem = new FileSystemImpl(fileSystemIntegration, charset, notifications)
+    val path = Paths.get("hello.txt")
+    val expected = "Hello, world!"
+    expecting {
+      fileSystemIntegration.readAllBytes(path).andReturn(expected.getBytes(charset))
+    }
+    whenExecuting(fileSystemIntegration) {
+      val actual = fileSystem.loadFileIntoString(path)
+      assert(actual === expected)
+    }
+  }
+
+  test("store string into file") {
+    val path = Paths.get("myDir", "hello.txt")
+    val content = "Hello, world!"
+    val bytes = content.getBytes(charset)
+    val fileSystemIntegration = new AbstractFileSystemIntegration {
+      override def createDirectories(thePath: Path): Path = {
+        assert(thePath === path.getParent)
+        thePath
+      }
+
+      override def write(thePath: Path, theBytes: Array[Byte]): Path = {
+        assert(thePath === path)
+        assert(theBytes === bytes)
+        thePath
+      }
+    }
+    val notifications = mock[Notifications]
+    val fileSystem = new FileSystemImpl(fileSystemIntegration, charset, notifications)
+    expecting {
+      notifications.storeStringIntoFile(content, path)
+    }
+    whenExecuting(notifications) {
+      fileSystem.storeStringIntoFile(content, path)
+    }
   }
 }

@@ -20,7 +20,9 @@ class FileSystemImpl(fileSystemIntegration: FileSystemIntegration,
     string
   }
 
-  override def isDirectory(path: Path): Boolean = fileSystemIntegration.isDirectory(path)
+  override def isDirectory(path: Path): Boolean = {
+    fileSystemIntegration.isDirectory(path)
+  }
 
   override def storeStringIntoFile(s: String, path: Path): Unit = {
     notifications.storeStringIntoFile(s, path)
