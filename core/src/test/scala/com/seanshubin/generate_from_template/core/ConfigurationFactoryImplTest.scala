@@ -28,9 +28,31 @@ class ConfigurationFactoryImplTest extends FunSuite with EasyMockSugar {
     new Helper {
       override def content =
         """{
-          |  greetingTarget world
+          |  templateDirectory ../template-scala-web
+          |  destinationDirectory ../../generated/foo-bar
+          |  directoryReplacements
+          |  {
+          |    template/scala/web foo/bar
+          |  }
+          |  textReplacements
+          |  {
+          |    template.scala.web foo.bar
+          |    template-scala-web foo-bar
+          |    template/scala/web foo/bar
+          |  }
+          |  ignoreDirectoryNamePatterns
+          |  [
+          |    target
+          |    \.git
+          |    \.idea
+          |  ]
+          |  ignoreFileNamePatterns
+          |  [
+          |    \.gitattributes
+          |    .*\.iml
+          |  ]
           |}
-          | """.stripMargin
+          |""".stripMargin
 
       override def expected = Right(completeConfiguration)
 
