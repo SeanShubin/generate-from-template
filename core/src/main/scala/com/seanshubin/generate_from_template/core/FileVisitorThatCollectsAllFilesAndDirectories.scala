@@ -20,7 +20,9 @@ class FileVisitorThatCollectsAllFilesAndDirectories(ignoreDirectoryNamePatterns:
     }
   }
 
-  override def visitFileFailed(file: Path, exc: IOException): FileVisitResult = ???
+  override def visitFileFailed(file: Path, exc: IOException): FileVisitResult = {
+    throw new RuntimeException(s"Failed to visit file $file", exc)
+  }
 
   override def visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult = {
     if (ignoreFileNamePatterns.exists(file.getFileName.toString.matches)) {

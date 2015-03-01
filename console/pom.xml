@@ -13,34 +13,6 @@
             <artifactId>generate-from-template-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-actor_2.11</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.joda</groupId>
-            <artifactId>joda-convert</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-scala_2.11</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src/main/scala</sourceDirectory>
@@ -53,12 +25,16 @@
             <plugin>
                 <groupId>org.dstovall</groupId>
                 <artifactId>onejar-maven-plugin</artifactId>
-                <version>1.4.4</version>
+                <version>1.4.5</version>
                 <executions>
                     <execution>
                         <configuration>
                             <mainClass>com.seanshubin.generate_from_template.console.ConsoleApplication</mainClass>
                             <filename>generate-from-template.jar</filename>
+                            <manifestEntries>
+                                <One-Jar-URL-Factory>com.simontuffs.onejar.JarClassLoader$OneJarURLFactory
+                                </One-Jar-URL-Factory>
+                            </manifestEntries>
                         </configuration>
                         <goals>
                             <goal>one-jar</goal>

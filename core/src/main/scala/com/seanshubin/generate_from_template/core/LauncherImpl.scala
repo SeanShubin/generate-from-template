@@ -1,16 +1,16 @@
 package com.seanshubin.generate_from_template.core
 
-import java.nio.file.Paths
-
-import com.seanshubin.utility.json.JsonMarshaller
-
-class LauncherImpl(commandLineArguments: Seq[String], fileSystem: FileSystem, jsonMarshaller: JsonMarshaller, createRunner: Configuration => Runner) extends Launcher {
+class LauncherImpl(args: Seq[String],
+                   configurationFactory: ConfigurationFactory,
+                   runnerFactory: RunnerFactory,
+                   notifications: Notifications) extends Launcher {
   override def launch(): Unit = {
-    val configFileName = commandLineArguments(0)
-    val configFilePath = Paths.get(configFileName)
-    val configText = fileSystem.loadFileIntoString(configFilePath)
-    val jsonConfiguration = jsonMarshaller.fromJson(configText, classOf[JsonConfiguration])
-    val runner = createRunner(jsonConfiguration.toConfiguration)
-    runner.run()
+    val errorOrConfiguration = configurationFactory.validate(args)
+    errorOrConfiguration match {
+      case Left(error) => notifications.configurationError(error)
+      case Right(configuration) =>
+        notifications.effectiveConfiguration(configuration)
+        runnerFactory.createRunner(configuration).run()
+    }
   }
 }

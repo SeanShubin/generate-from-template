@@ -5,7 +5,7 @@ import java.nio.file.Paths
 import org.scalatest.FunSuite
 import org.scalatest.mock.EasyMockSugar
 
-class RunnerTest extends FunSuite with EasyMockSugar {
+class RunnerImplTest extends FunSuite with EasyMockSugar {
   test("application flow") {
     val fileSystem = mock[FileSystem]
     val templateDirectory = Paths.get("foo", "bar")
