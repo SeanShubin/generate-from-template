@@ -12,7 +12,7 @@ trait RunnerWiring {
   lazy val emitLine: String => Unit = println
   lazy val fileSystemIntegration: FileSystemIntegration = new FileSystemIntegrationImpl()
   lazy val charset: Charset = StandardCharsets.UTF_8
-  lazy val devonMarshaller: DevonMarshaller = new DefaultDevonMarshaller()
+  lazy val devonMarshaller: DevonMarshaller = DefaultDevonMarshaller
   lazy val notifications: Notifications = new LineEmittingNotifications(devonMarshaller, emitLine)
   lazy val fileSystem: FileSystem = new FileSystemImpl(fileSystemIntegration, charset, notifications)
   lazy val commandFactory: CommandFactory = new CommandFactoryImpl

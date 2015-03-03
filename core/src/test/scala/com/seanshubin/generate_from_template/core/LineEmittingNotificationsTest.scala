@@ -17,7 +17,7 @@ class LineEmittingNotificationsTest extends FunSuite {
 
   test("create directories") {
     val lineEmitter = new LineEmitter
-    val devonMarshaller = new DefaultDevonMarshaller
+    val devonMarshaller = DefaultDevonMarshaller
     val notifications = new LineEmittingNotifications(devonMarshaller, lineEmitter)
     val path = Paths.get("foo", "bar")
     val pathString = path.toString
@@ -28,7 +28,7 @@ class LineEmittingNotificationsTest extends FunSuite {
 
   test("store string into file") {
     val lineEmitter = new LineEmitter
-    val devonMarshaller = new DefaultDevonMarshaller
+    val devonMarshaller = DefaultDevonMarshaller
     val notifications = new LineEmittingNotifications(devonMarshaller, lineEmitter)
     val path = Paths.get("foo", "bar")
     val pathString = path.toString
