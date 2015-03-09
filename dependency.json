@@ -6,6 +6,7 @@
       "generate-from-template.jar"
     ]
   ],
+  "scrubGroupingPattern": "com/seanshubin/([^/]+).*",
   "styleSheet": ["dependency.css"],
   "relevantDependencyPattern": {
     "includeRegex": ["com/seanshubin/generate_from_template/.*"],
@@ -32,12 +33,20 @@
   "classLimits": {
     "depth": 11,
     "complexity": 100,
+    "cycleCount": 0,
     "cycleCount": 0
   },
   "packageLimits": {
     "depth": 4,
     "complexity": 10,
+    "cycleCount": 0,
     "cycleCount": 0
+  },
+  "groupingLimits": {
+    "depth": 1,
+    "complexity": 0,
+    "cycleCount": 0,
+    "cycleSize": 0
   },
   "failIfAnyLimitExceeded": true
 }
