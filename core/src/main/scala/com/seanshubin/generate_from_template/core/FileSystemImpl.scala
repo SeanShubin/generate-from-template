@@ -3,7 +3,7 @@ package com.seanshubin.generate_from_template.core
 import java.nio.charset.Charset
 import java.nio.file.Path
 
-import com.seanshubin.utility.file_system.FileSystemIntegration
+import com.seanshubin.utility.filesystem.FileSystemIntegration
 
 class FileSystemImpl(fileSystemIntegration: FileSystemIntegration,
                      charset: Charset,

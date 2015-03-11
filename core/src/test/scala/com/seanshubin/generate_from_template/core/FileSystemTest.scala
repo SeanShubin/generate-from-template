@@ -3,7 +3,7 @@ package com.seanshubin.generate_from_template.core
 import java.nio.charset.StandardCharsets
 import java.nio.file.{FileVisitor, Path, Paths}
 
-import com.seanshubin.utility.file_system.FileSystemIntegration
+import com.seanshubin.utility.filesystem.{FileSystemIntegrationNotImplemented, FileSystemIntegration}
 import org.scalatest.FunSuite
 import org.scalatest.mock.EasyMockSugar
 
@@ -12,23 +12,7 @@ class FileSystemTest extends FunSuite with EasyMockSugar {
 
   def path(first: String, more: String*): Path = Paths.get(first, more: _*)
 
-  abstract class AbstractFileSystemIntegration extends FileSystemIntegration {
-    override def readAllBytes(path: Path): Array[Byte] = ???
-
-    override def createDirectories(path: Path): Path = ???
-
-    override def walkFileTree(start: Path, visitor: FileVisitor[_ >: Path]): Path = ???
-
-    override def write(path: Path, bytes: Array[Byte]): Path = ???
-
-    override def isDirectory(path: Path): Boolean = ???
-
-    override def deleteIfExists(path: Path): Boolean = ???
-
-    override def exists(path: Path): Boolean = ???
-  }
-
-  class FakeFileSystemIntegration extends AbstractFileSystemIntegration {
+  class FakeFileSystemIntegration extends FileSystemIntegrationNotImplemented {
     override def walkFileTree(start: Path, visitor: FileVisitor[_ >: Path]): Path = {
       visitor.preVisitDirectory(Paths.get("target", "walk-file-tree-test"), null)
       visitor.preVisitDirectory(Paths.get("target", "walk-file-tree-test", "aaa"), null)
@@ -86,7 +70,7 @@ class FileSystemTest extends FunSuite with EasyMockSugar {
     val path = Paths.get("myDir", "hello.txt")
     val content = "Hello, world!"
     val bytes = content.getBytes(charset)
-    val fileSystemIntegration = new AbstractFileSystemIntegration {
+    val fileSystemIntegration = new FileSystemIntegrationNotImplemented {
       override def createDirectories(thePath: Path): Path = {
         assert(thePath === path.getParent)
         thePath
