@@ -2,7 +2,7 @@ package com.seanshubin.generate_from_template.core
 
 import java.nio.file.Paths
 
-import com.seanshubin.devon.core.devon.DefaultDevonMarshaller
+import com.seanshubin.devon.core.devon.DevonMarshallerWiring
 import org.scalatest.FunSuite
 
 import scala.collection.mutable.ArrayBuffer
@@ -17,7 +17,7 @@ class LineEmittingNotificationsTest extends FunSuite {
 
   test("create directories") {
     val lineEmitter = new LineEmitter
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val notifications = new LineEmittingNotifications(devonMarshaller, lineEmitter)
     val path = Paths.get("foo", "bar")
     val pathString = path.toString
@@ -28,7 +28,7 @@ class LineEmittingNotificationsTest extends FunSuite {
 
   test("store string into file") {
     val lineEmitter = new LineEmitter
-    val devonMarshaller = DefaultDevonMarshaller
+    val devonMarshaller = DevonMarshallerWiring.Default
     val notifications = new LineEmittingNotifications(devonMarshaller, lineEmitter)
     val path = Paths.get("foo", "bar")
     val pathString = path.toString

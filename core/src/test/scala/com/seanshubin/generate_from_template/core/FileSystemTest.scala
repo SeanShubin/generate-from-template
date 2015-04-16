@@ -3,7 +3,7 @@ package com.seanshubin.generate_from_template.core
 import java.nio.charset.StandardCharsets
 import java.nio.file.{FileVisitor, Path, Paths}
 
-import com.seanshubin.utility.filesystem.{FileSystemIntegrationNotImplemented, FileSystemIntegration}
+import com.seanshubin.utility.filesystem.{FileSystemIntegration, FileSystemIntegrationNotImplemented}
 import org.scalatest.FunSuite
 import org.scalatest.mock.EasyMockSugar
 
