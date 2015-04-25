@@ -76,7 +76,7 @@ class FileSystemTest extends FunSuite with EasyMockSugar {
         thePath
       }
 
-      override def write(thePath: Path, theBytes: Array[Byte]): Path = {
+      override def write(thePath: Path, theBytes: Seq[Byte]): Path = {
         assert(thePath === path)
         assert(theBytes === bytes)
         thePath

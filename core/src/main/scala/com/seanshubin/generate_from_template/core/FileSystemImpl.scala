@@ -16,7 +16,7 @@ class FileSystemImpl(fileSystemIntegration: FileSystemIntegration,
 
   override def loadFileIntoString(path: Path): String = {
     val bytes = fileSystemIntegration.readAllBytes(path)
-    val string = new String(bytes, charset)
+    val string = new String(bytes.toArray, charset)
     string
   }
 
