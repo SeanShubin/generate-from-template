@@ -3,71 +3,64 @@ package com.seanshubin.generate_from_template.core
 import java.nio.file.Paths
 
 import org.scalatest.FunSuite
-import org.scalatest.mock.EasyMockSugar
 
-class LauncherImplTest extends FunSuite with EasyMockSugar {
+import scala.collection.mutable.ArrayBuffer
+
+class LauncherImplTest extends FunSuite {
+  val validConfiguration: Configuration = Configuration(
+    templateDirectory = Paths.get("..", "template-scala-web"),
+    destinationDirectory = Paths.get("..", "..", "generated", "foo-bar"),
+    directoryReplacements = Map(
+      Paths.get("template", "scala", "web") -> Paths.get("foo", "bar")
+    ),
+    textReplacements = Map(
+      "template.scala.web" -> "foo.bar",
+      "template-scala-web" -> "foo-bar",
+      "template/scala/web" -> "foo/bar"
+    ),
+    ignoreDirectoryNamePatterns = Seq("target", "\\.git", "\\.idea"),
+    ignoreFileNamePatterns = Seq("\\.gitattributes", ".*\\.iml")
+  )
+
   test("valid configuration") {
-    new Helper {
-      override def expecting = () => {
-        configurationFactory.validate(args).andReturn(validationSuccess)
-        notifications.effectiveConfiguration(validConfiguration)
-        runnerFactory.createRunner(validConfiguration).andReturn(runner)
-        runner.run()
-      }
+    val helper = new Helper(validationResult = Right(validConfiguration))
+    helper.launcher.launch()
+    assert(helper.sideEffects.size === 2)
+    assert(helper.sideEffects(0) ===("notifications.effectiveConfiguration", validConfiguration))
+    assert(helper.sideEffects(1) ===("runner.run", ()))
 
-      override def whenExecuting = () => {
-        launcher.launch()
-      }
-    }
   }
 
   test("invalid configuration") {
-    new Helper {
-      override def expecting = () => {
-        configurationFactory.validate(args).andReturn(validationFailure)
-        notifications.configurationError(errorLines)
-      }
+    val helper = new Helper(validationResult = Left(Seq("error")))
+    helper.launcher.launch()
+    assert(helper.sideEffects.size === 1)
+    assert(helper.sideEffects(0) ===("notifications.configurationError", Seq("error")))
+  }
 
-      override def whenExecuting = () => {
-        launcher.launch()
-      }
+  class Helper(validationResult: Either[Seq[String], Configuration]) {
+    val sideEffects: ArrayBuffer[(String, Any)] = new ArrayBuffer()
+    val configurationFactory = new FakeConfigurationFactory(Seq("foo.txt"), validationResult)
+    val runner = new FakeRunner(sideEffects)
+    val runnerFactory = new FakeRunnerFactory(runner)
+    val notifications = new FakeNotifications(sideEffects)
+    val launcher = new LauncherImpl(Seq("foo.txt"), configurationFactory, runnerFactory, notifications)
+  }
+
+  class FakeConfigurationFactory(expectedArgs: Seq[String], result: Either[Seq[String], Configuration]) extends ConfigurationFactory {
+    override def validate(args: Seq[String]): Either[Seq[String], Configuration] = {
+      assert(args === expectedArgs)
+      result
     }
   }
 
-  trait Helper {
-    val args: Seq[String] = Seq("arg1")
-    val validConfiguration: Configuration = Configuration(
-      templateDirectory = Paths.get("..", "template-scala-web"),
-      destinationDirectory = Paths.get("..", "..", "generated", "foo-bar"),
-      directoryReplacements = Map(
-        Paths.get("template", "scala", "web") -> Paths.get("foo", "bar")
-      ),
-      textReplacements = Map(
-        "template.scala.web" -> "foo.bar",
-        "template-scala-web" -> "foo-bar",
-        "template/scala/web" -> "foo/bar"
-      ),
-      ignoreDirectoryNamePatterns = Seq("target", "\\.git", "\\.idea"),
-      ignoreFileNamePatterns = Seq("\\.gitattributes", ".*\\.iml")
-    )
-
-    val validationSuccess = Right(validConfiguration)
-    val errorLines = Seq("error")
-    val validationFailure = Left(errorLines)
-    val configurationFactory = mock[ConfigurationFactory]
-    val runnerFactory = mock[RunnerFactory]
-    val notifications = mock[Notifications]
-    val runner = mock[Runner]
-    val launcher = new LauncherImpl(args, configurationFactory, runnerFactory, notifications)
-
-    def expecting: () => Unit
-
-    def whenExecuting: () => Unit
-
-    expecting()
-    EasyMockSugar.whenExecuting(configurationFactory, runnerFactory, notifications, runner) {
-      whenExecuting()
-    }
+  class FakeRunner(sideEffects: ArrayBuffer[(String, Any)]) extends Runner {
+    override def run(): Unit = sideEffects.append(("runner.run", ()))
   }
+
+  class FakeRunnerFactory(runner: Runner) extends RunnerFactory {
+    override def createRunner(configuration: Configuration): Runner = runner
+  }
+
 
 }
