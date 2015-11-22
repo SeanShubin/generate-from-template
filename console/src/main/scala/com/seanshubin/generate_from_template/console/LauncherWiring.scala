@@ -16,7 +16,9 @@ trait LauncherWiring {
   lazy val notifications: Notifications = new LineEmittingNotifications(devonMarshaller, emitLine)
   lazy val configurationFactory: ConfigurationFactory = new ConfigurationFactoryImpl(
     fileSystem, devonMarshaller, charset)
-  lazy val runnerFactory: RunnerFactory = new RunnerFactoryImpl()
-  lazy val launcher: Launcher = new LauncherImpl(
-    commandLineArguments, configurationFactory, runnerFactory, notifications)
+  lazy val createRunner: Configuration => Runnable = (theConfiguration) => new RunnerWiring {
+    override def configuration: Configuration = theConfiguration
+  }.runner
+  lazy val launcher: Runnable = new LauncherImpl(
+    commandLineArguments, configurationFactory, createRunner, notifications)
 }

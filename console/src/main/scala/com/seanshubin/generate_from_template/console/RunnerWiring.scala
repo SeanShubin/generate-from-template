@@ -17,7 +17,7 @@ trait RunnerWiring {
   lazy val fileSystem: FileSystem = new FileSystemImpl(fileSystemIntegration, charset, notifications)
   lazy val commandFactory: CommandFactory = new CommandFactoryImpl
   lazy val commandExecutor: CommandExecutor = new CommandExecutorImpl(fileSystem, configuration.textReplacements)
-  lazy val runner: Runner = new RunnerImpl(
+  lazy val runner: Runnable = new RunnerImpl(
     configuration.templateDirectory,
     configuration.destinationDirectory,
     configuration.directoryReplacements,

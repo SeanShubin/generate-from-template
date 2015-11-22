@@ -9,7 +9,7 @@ class RunnerImpl(templateDirectory: Path,
                  commandFactory: CommandFactory,
                  commandExecutor: CommandExecutor,
                  ignoreDirectoryNamePatterns: Seq[String],
-                 ignoreFileNamePatterns: Seq[String]) extends Runner {
+                 ignoreFileNamePatterns: Seq[String]) extends Runnable {
   override def run(): Unit = {
     val allFiles = fileSystem.allFilesAndDirectories(templateDirectory, ignoreDirectoryNamePatterns, ignoreFileNamePatterns)
     val commands = commandFactory.generateCommands(allFiles, templateDirectory, destinationDirectory, directoryReplacements)

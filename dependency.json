@@ -7,14 +7,20 @@
     ]
   ],
   "scrubGroupingPattern": "com/seanshubin/([^/]+).*",
-  "styleSheet": ["dependency.css"],
+  "styleSheet": [
+    "dependency.css"
+  ],
   "relevantDependencyPattern": {
-    "includeRegex": ["com/seanshubin/generate_from_template/.*"],
+    "includeRegex": [
+      "com/seanshubin/generate_from_template/.*"
+    ],
     "excludeRegex": []
   },
   "trimRegex": "^com/seanshubin/generate_from_template/",
   "classFileNamePattern": {
-    "includeRegex": [".*\\.class"],
+    "includeRegex": [
+      ".*\\.class"
+    ],
     "excludeRegex": []
   },
   "zipFileNamePattern": {

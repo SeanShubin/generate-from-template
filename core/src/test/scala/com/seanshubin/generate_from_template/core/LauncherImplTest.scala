@@ -24,7 +24,7 @@ class LauncherImplTest extends FunSuite {
 
   test("valid configuration") {
     val helper = new Helper(validationResult = Right(validConfiguration))
-    helper.launcher.launch()
+    helper.launcher.run()
     assert(helper.sideEffects.size === 2)
     assert(helper.sideEffects(0) ===("notifications.effectiveConfiguration", validConfiguration))
     assert(helper.sideEffects(1) ===("runner.run", ()))
@@ -33,7 +33,7 @@ class LauncherImplTest extends FunSuite {
 
   test("invalid configuration") {
     val helper = new Helper(validationResult = Left(Seq("error")))
-    helper.launcher.launch()
+    helper.launcher.run()
     assert(helper.sideEffects.size === 1)
     assert(helper.sideEffects(0) ===("notifications.configurationError", Seq("error")))
   }
@@ -42,7 +42,7 @@ class LauncherImplTest extends FunSuite {
     val sideEffects: ArrayBuffer[(String, Any)] = new ArrayBuffer()
     val configurationFactory = new FakeConfigurationFactory(Seq("foo.txt"), validationResult)
     val runner = new FakeRunner(sideEffects)
-    val runnerFactory = new FakeRunnerFactory(runner)
+    val runnerFactory: Configuration => Runnable = (theConfiguration) => runner
     val notifications = new FakeNotifications(sideEffects)
     val launcher = new LauncherImpl(Seq("foo.txt"), configurationFactory, runnerFactory, notifications)
   }
@@ -54,13 +54,8 @@ class LauncherImplTest extends FunSuite {
     }
   }
 
-  class FakeRunner(sideEffects: ArrayBuffer[(String, Any)]) extends Runner {
+  class FakeRunner(sideEffects: ArrayBuffer[(String, Any)]) extends Runnable {
     override def run(): Unit = sideEffects.append(("runner.run", ()))
   }
-
-  class FakeRunnerFactory(runner: Runner) extends RunnerFactory {
-    override def createRunner(configuration: Configuration): Runner = runner
-  }
-
 
 }

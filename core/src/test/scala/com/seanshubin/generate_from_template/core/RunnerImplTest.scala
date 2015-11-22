@@ -28,7 +28,7 @@ class RunnerImplTest extends FunSuite {
       command2
     )
     val commandFactory = new FakeCommandFactory(commands, templateFilesAndDirectories, templateDirectory, destinationDirectory, directoryReplacements)
-    val runner: Runner = new RunnerImpl(
+    val runner: Runnable = new RunnerImpl(
       templateDirectory,
       destinationDirectory,
       directoryReplacements,
