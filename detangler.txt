@@ -1,0 +1,17 @@
+{
+  reportDir generated/detangled
+  searchPaths
+  [
+    console/target/generate-from-template.jar
+  ]
+  level 2
+  startsWith
+  {
+    include [[com seanshubin generate_from_template]]
+    exclude []
+    drop [[com seanshubin generate_from_template]]
+  }
+  ignoreFiles []
+  canFailBuild true
+  allowedInCycle []
+}
