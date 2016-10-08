@@ -2,7 +2,7 @@ package com.seanshubin.generate_from_template.core
 
 import java.nio.file.Paths
 
-import com.seanshubin.devon.core.devon.DevonMarshallerWiring
+import com.seanshubin.devon.domain.DevonMarshallerWiring
 import org.scalatest.FunSuite
 
 import scala.collection.mutable.ArrayBuffer

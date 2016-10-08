@@ -3,7 +3,7 @@ package com.seanshubin.generate_from_template.core
 import java.nio.charset.{Charset, StandardCharsets}
 import java.nio.file.{Path, Paths}
 
-import com.seanshubin.devon.core.devon.DevonMarshallerWiring
+import com.seanshubin.devon.domain.DevonMarshallerWiring
 import com.seanshubin.utility.filesystem.FileSystemIntegrationNotImplemented
 import org.scalatest.FunSuite
 
