@@ -2,8 +2,7 @@ package com.seanshubin.generate_from_template.console
 
 import java.nio.charset.{Charset, StandardCharsets}
 
-import com.seanshubin.devon.domain.DevonMarshallerWiring
-import com.seanshubin.devon.parserules.DevonMarshaller
+import com.seanshubin.devon.domain.{DevonMarshaller, DevonMarshallerWiring}
 import com.seanshubin.generate_from_template.core._
 import com.seanshubin.utility.filesystem.{FileSystemIntegration, FileSystemIntegrationImpl}
 
