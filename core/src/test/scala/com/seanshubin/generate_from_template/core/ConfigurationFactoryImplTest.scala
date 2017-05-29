@@ -1,10 +1,9 @@
 package com.seanshubin.generate_from_template.core
 
 import java.nio.charset.{Charset, StandardCharsets}
-import java.nio.file.{Path, Paths}
+import java.nio.file.{LinkOption, Path, Paths}
 
 import com.seanshubin.devon.domain.DevonMarshallerWiring
-import com.seanshubin.utility.filesystem.FileSystemIntegrationNotImplemented
 import org.scalatest.FunSuite
 
 class ConfigurationFactoryImplTest extends FunSuite {
@@ -95,13 +94,13 @@ class ConfigurationFactoryImplTest extends FunSuite {
 
   val charset: Charset = StandardCharsets.UTF_8
 
-  class FakeFileSystem(configFilePath: Path, content: String, exists: Boolean) extends FileSystemIntegrationNotImplemented {
-    override def exists(path: Path): Boolean = {
+  class FakeFileSystem(configFilePath: Path, content: String, exists: Boolean) extends FilesNotImplemented {
+    override def exists(path: Path, options: LinkOption*): Boolean = {
       assert(path === configFilePath)
       exists
     }
 
-    override def readAllBytes(path: Path): Seq[Byte] = {
+    override def readAllBytes(path: Path): Array[Byte] = {
       assert(path === configFilePath)
       content.getBytes(charset)
     }

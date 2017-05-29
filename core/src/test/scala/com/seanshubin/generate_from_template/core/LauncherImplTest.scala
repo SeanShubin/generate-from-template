@@ -26,8 +26,8 @@ class LauncherImplTest extends FunSuite {
     val helper = new Helper(validationResult = Right(validConfiguration))
     helper.launcher.run()
     assert(helper.sideEffects.size === 2)
-    assert(helper.sideEffects(0) ===("notifications.effectiveConfiguration", validConfiguration))
-    assert(helper.sideEffects(1) ===("runner.run", ()))
+    assert(helper.sideEffects(0) === ("notifications.effectiveConfiguration", validConfiguration))
+    assert(helper.sideEffects(1) === ("runner.run", ()))
 
   }
 
@@ -35,7 +35,7 @@ class LauncherImplTest extends FunSuite {
     val helper = new Helper(validationResult = Left(Seq("error")))
     helper.launcher.run()
     assert(helper.sideEffects.size === 1)
-    assert(helper.sideEffects(0) ===("notifications.configurationError", Seq("error")))
+    assert(helper.sideEffects(0) === ("notifications.configurationError", Seq("error")))
   }
 
   class Helper(validationResult: Either[Seq[String], Configuration]) {

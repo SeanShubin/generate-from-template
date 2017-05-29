@@ -1,9 +1,9 @@
 package com.seanshubin.generate_from_template.core
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.{FileVisitor, Path, Paths}
+import java.nio.file.attribute.FileAttribute
+import java.nio.file.{FileVisitor, OpenOption, Path, Paths}
 
-import com.seanshubin.utility.filesystem.{FileSystemIntegration, FileSystemIntegrationNotImplemented}
 import org.scalatest.FunSuite
 
 import scala.collection.mutable.ArrayBuffer
@@ -14,10 +14,10 @@ class FileSystemTest extends FunSuite {
   def path(first: String, more: String*): Path = Paths.get(first, more: _*)
 
   test("can load files and directories") {
-    val fileSystemIntegration: FileSystemIntegration = new FakeFileSystemIntegration(null, null)
+    val files: FilesContract = new FakeFileSystemIntegration(null, null)
     val sideEffects: ArrayBuffer[(String, Any)] = new ArrayBuffer()
     val notifications = new FakeNotifications(sideEffects)
-    val fileSystem: FileSystem = new FileSystemImpl(fileSystemIntegration, charset, notifications)
+    val fileSystem: FileSystem = new FileSystemImpl(files, charset, notifications)
     val ignoreDirectoryNames = Seq()
     val ignoreFileNamePatterns = Seq()
     val actual = fileSystem.allFilesAndDirectories(Paths.get("foo"), ignoreDirectoryNames, ignoreFileNamePatterns)
@@ -50,13 +50,13 @@ class FileSystemTest extends FunSuite {
     val path = Paths.get("myDir", "hello.txt")
     val content = "Hello, world!"
     val bytes = content.getBytes(charset)
-    val fileSystemIntegration = new FileSystemIntegrationNotImplemented {
-      override def createDirectories(thePath: Path): Path = {
-        assert(thePath === path.getParent)
-        thePath
+    val fileSystemIntegration = new FilesNotImplemented {
+      override def createDirectories(dir: Path, attrs: FileAttribute[_]*): Path = {
+        assert(dir === path.getParent)
+        dir
       }
 
-      override def write(thePath: Path, theBytes: Seq[Byte]): Path = {
+      override def write(thePath: Path, theBytes: Array[Byte], options: OpenOption*): Path = {
         assert(thePath === path)
         assert(theBytes === bytes)
         thePath
@@ -69,8 +69,8 @@ class FileSystemTest extends FunSuite {
     assert(sideEffects === Seq(("notifications.storeStringIntoFile", ("Hello, world!", path))))
   }
 
-  class FakeFileSystemIntegration(pathToRead: Path, stringToReturn: String) extends FileSystemIntegrationNotImplemented {
-    override def readAllBytes(path: Path): Seq[Byte] = {
+  class FakeFileSystemIntegration(pathToRead: Path, stringToReturn: String) extends FilesNotImplemented {
+    override def readAllBytes(path: Path): Array[Byte] = {
       assert(path === pathToRead)
       stringToReturn.getBytes(charset)
     }

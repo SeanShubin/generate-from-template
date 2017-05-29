@@ -15,10 +15,6 @@
             <artifactId>devon-domain</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.seanshubin.utility</groupId>
-            <artifactId>utility-filesystem</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
         </dependency>

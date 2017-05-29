@@ -13,8 +13,10 @@ class CommandFactoryImpl extends CommandFactory {
         val updated = soFar.replaceAllLiterally(before.toString, after.toString)
         updated
       }
+
       Paths.get(directoryReplacements.foldLeft(path.toString)(applyReplacement))
     }
+
     def generateCommand(sourcePath: Path) = {
       val relativePath = templateDirectory.relativize(sourcePath)
       val destinationPath = destinationDirectory.resolve(relativePath)
@@ -24,6 +26,7 @@ class CommandFactoryImpl extends CommandFactory {
         destination = replacedPath
       )
     }
+
     sourcePaths.map(generateCommand)
   }
 }

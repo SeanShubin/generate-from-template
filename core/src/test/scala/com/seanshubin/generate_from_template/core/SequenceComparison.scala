@@ -66,6 +66,7 @@ object SequenceComparison {
         case (None, None) => Same
       }
     }
+
     compareLists(0, actualSeq.toList, expectedSeq.toList)
   }
 }

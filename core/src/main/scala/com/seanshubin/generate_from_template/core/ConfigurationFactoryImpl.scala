@@ -4,9 +4,8 @@ import java.nio.charset.Charset
 import java.nio.file.Paths
 
 import com.seanshubin.devon.domain.DevonMarshaller
-import com.seanshubin.utility.filesystem.FileSystemIntegration
 
-class ConfigurationFactoryImpl(fileSystem: FileSystemIntegration,
+class ConfigurationFactoryImpl(files: FilesContract,
                                devonMarshaller: DevonMarshaller,
                                charset: Charset) extends ConfigurationFactory {
   private val sampleConfiguration: Configuration = Configuration(
@@ -28,9 +27,9 @@ class ConfigurationFactoryImpl(fileSystem: FileSystemIntegration,
     if (args.length == 1) {
       val configFilePath = Paths.get(args(0))
       try {
-        if (fileSystem.exists(configFilePath)) {
-          val bytes = fileSystem.readAllBytes(configFilePath)
-          val text = new String(bytes.toArray, charset)
+        if (files.exists(configFilePath)) {
+          val bytes = files.readAllBytes(configFilePath)
+          val text = new String(bytes, charset)
           val devon = devonMarshaller.fromString(text)
           val config = devonMarshaller.toValue(devon, classOf[Configuration])
           Right(config)
