@@ -119,9 +119,7 @@
         </pluginManagement>
     </build>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Copies a directory tree while replacing the directory structure and file text. Useful for project
-        templates composed of text files.
-    </description>
+    <description>Copies a directory tree while replacing the directory structure and file text.  Useful for project templates composed of text files.</description>
     <url>https://github.com/SeanShubin/templater</url>
     <licenses>
         <license>
