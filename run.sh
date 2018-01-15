@@ -1,2 +1,2 @@
 #!/bin/bash
-java -jar console/target/generate-from-template.jar sample-config.txt
+java -jar console/target/templater.jar sample-config.txt

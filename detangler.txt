@@ -2,14 +2,14 @@
   reportDir generated/detangled
   searchPaths
   [
-    console/target/generate-from-template.jar
+    console/target/templater.jar
   ]
   level 2
   startsWith
   {
-    include [[com seanshubin generate_from_template]]
+    include [[com seanshubin templater]]
     exclude []
-    drop [[com seanshubin generate_from_template]]
+    drop [[com seanshubin templater]]
   }
   ignoreFiles []
   canFailBuild true

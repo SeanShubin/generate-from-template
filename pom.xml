@@ -3,7 +3,7 @@
 
     <!-- The Basics -->
     <groupId>com.seanshubin</groupId>
-    <artifactId>generate-from-template</artifactId>
+    <artifactId>templater</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <dependencies>
@@ -35,7 +35,7 @@
         </dependencies>
     </dependencyManagement>
     <modules>
-        <module>core</module>
+        <module>domain</module>
         <module>console</module>
     </modules>
     <properties>
@@ -117,7 +117,7 @@
     <!--<reporting>...</reporting>-->
 
     <!-- More Project Information -->
-    <name>generate-from-template</name>
+    <name>templater</name>
     <!--<description>...</description>-->
     <!--<url>...</url>-->
     <!--<inceptionYear>...</inceptionYear>-->
