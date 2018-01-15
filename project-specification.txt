@@ -1,0 +1,37 @@
+{
+  prefix [com seanshubin]
+  name [templater]
+  description 'Copies a directory tree while replacing the directory structure and file text.  Useful for project templates composed of text files.'
+  version 0.1-SNAPSHOT
+  developer {
+    name          'Sean Shubin'
+    githubName    SeanShubin
+    mavenUserName SeanShubin
+    organization  'Sean Shubin'
+    url           http://seanshubin.com/
+  }
+  dependencies {
+    scala-library {
+      group    org.scala-lang
+      artifact scala-library
+    }
+    scala-test {
+      group    org.scalatest
+      artifact scalatest_2.12
+      scope    test
+    }
+    devon {
+      group    com.seanshubin.devon
+      artifact devon-domain
+    }
+  }
+  global [scala-library scala-test]
+  modules {
+    console [domain]
+    domain  [devon]
+  }
+  detangler [console]
+  consoleEntryPoint {
+    console com.seanshubin.templater.console.ConsoleApplication
+  }
+}

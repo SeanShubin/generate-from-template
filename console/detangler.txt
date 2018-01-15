@@ -1,0 +1,31 @@
+{
+  reportDir console/target/detangled
+  searchPaths
+  [
+    ./console/target/templater.jar
+  ]
+  level 2
+  startsWith
+  {
+    include
+    [
+      [
+        com
+        seanshubin
+        templater
+      ]
+    ]
+    exclude []
+    drop
+    [
+      [
+        com
+        seanshubin
+        templater
+      ]
+    ]
+  }
+  ignoreFiles []
+  canFailBuild true
+  allowedInCycle console/detangler-allowed-in-cycle.txt
+}
